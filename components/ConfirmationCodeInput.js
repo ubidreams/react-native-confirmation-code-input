@@ -22,6 +22,7 @@ export default class ConfirmationCodeInput extends Component {
     codeInputStyle: TextInput.propTypes.style,
     containerStyle: viewPropTypes.style,
     onFulfill: PropTypes.func,
+    onCodeChange: PropTypes.func
   };
   
   static defaultProps = {
@@ -197,6 +198,9 @@ export default class ConfirmationCodeInput extends Component {
     if (e.nativeEvent.key === 'Backspace') {
       const { currentIndex } = this.state;
       const nextIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+      let newCodeArr = _.clone(this.state.codeArr);
+      newCodeArr[currentIndex] = '';
+      this.props.onCodeChange(newCodeArr.join(''));
       this._setFocus(nextIndex);
     }
   }
@@ -205,7 +209,8 @@ export default class ConfirmationCodeInput extends Component {
     const { codeLength, onFulfill, compareWithCode, ignoreCase } = this.props;
     let newCodeArr = _.clone(this.state.codeArr);
     newCodeArr[index] = character;
-    
+    this.props.onCodeChange(newCodeArr.join(''));
+
     if (index == codeLength - 1) {
       const code = newCodeArr.join('');
       
